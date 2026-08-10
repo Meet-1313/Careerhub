@@ -18,7 +18,10 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: "https://careerhub-1-61ud.onrender.com",
+    credentials: true,
+}));
 app.use('/api/auth', authRoutes);
 app.use('/api/companies', companyRoutes);
 app.use('/api/job', jobRoutes);
