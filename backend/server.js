@@ -1,5 +1,5 @@
 import express from 'express';
-import dotenv from 'dotenv';
+import 'dotenv/config.js';
 import { connectDB } from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import companyRoutes from './routes/companyRoutes.js';
@@ -13,7 +13,6 @@ import cors from 'cors';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -35,7 +34,7 @@ app.get('/',(req,res) => {
 })
 
 connectDB().then(() => {
-    app.listen(PORT, () => {
+    app.listen(PORT, "0.0.0.0",() => {
         console.log('Server is running on port', PORT);
     });
 });

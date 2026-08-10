@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/generateToken.js";
 import fs from "fs";
+import cloudinary from "../config/cloudinary.js";
 import path from "path";
 
 export const registerUser = async (req, res) => {
@@ -62,8 +63,9 @@ export const getCurrentUser = async (req, res) => {
     }
 }
 
-export const uploadResume = async (req, res) => {
 
+
+export const uploadResume = async (req, res) => {
     try {
 
         if (!req.file) {
@@ -82,18 +84,19 @@ export const uploadResume = async (req, res) => {
             });
         }
 
-        // Delete previous resume if it exists
-        if (user.resume) {
-
-            const oldResumePath = user.resume.replace(/\//g, path.sep);
-
-            if (fs.existsSync(oldResumePath)) {
-                fs.unlinkSync(oldResumePath);
-            }
-
+         if (user.resume?.publicId) {
+            await cloudinary.uploader.destroy(
+                user.resume.publicId,
+                {
+                    resource_type: "raw",
+                }
+            );
         }
 
-        user.resume = req.file.path.replace(/\\/g, "/");
+        user.resume = {
+            url: req.file.path,
+            publicId: req.file.filename,
+        };
 
         await user.save();
 
@@ -113,8 +116,8 @@ export const uploadResume = async (req, res) => {
         });
 
     }
-
 };
+
 
 export const updateProfile = async (req, res) => {
 

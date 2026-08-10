@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_URL = axios.create({
-    baseURL: "http://localhost:5000/api/companies",
+    baseURL: `${import.meta.env.VITE_API_URL}/companies`
 })
 
 export const getMyCompanies = async (token,page=1,limit=10) => {

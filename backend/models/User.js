@@ -20,8 +20,12 @@ const userSchema = new mongoose.Schema({
         default:'jobseeker',
     },
      resume:{
-        type:String,
-        default:'',
+         url: {
+        type: String,
+    },
+    publicId: {
+        type: String,
+    },
     },
 
 },

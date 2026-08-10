@@ -202,7 +202,7 @@ function Profile() {
                         {user?.resume && (
 
                             <a
-                                href={`http://localhost:5000/${user.resume}`}
+                                href={user.resume.url}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="text-blue-600 hover:underline block mb-4"

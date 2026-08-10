@@ -1,7 +1,7 @@
 import axios  from "axios";
 
 const API_URL = axios.create({
-    baseURL: "http://localhost:5000/api/application",
+    baseURL: `${import.meta.env.VITE_API_URL}/application`,
 })
 
 export const getApplicants = async (jobId, token,page=1,limit=10) => {

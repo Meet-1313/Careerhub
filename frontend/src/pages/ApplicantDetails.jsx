@@ -146,7 +146,7 @@ function ApplicantDetails() {
                     </h2>
                     {application.applicant.resume ? (
                         <a
-                            href={`http://localhost:5000/${application.applicant.resume}`}
+                            href={application.applicant.resume.url}
                             target="_blank"
                             rel="noreferrer">
                             <Button variant="outline">
