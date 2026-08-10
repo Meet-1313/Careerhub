@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 
 function Pagination ({ currentPage, totalPages, onPageChange}) {
     if (totalPages <= 1) {
