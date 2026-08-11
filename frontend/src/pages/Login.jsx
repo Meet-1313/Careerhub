@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import Loading from '@/components/shared/Loading';
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
+import { Link } from 'react-router-dom';
 function Login() {
     const { login } = useAuth();
 
@@ -90,7 +91,7 @@ function Login() {
                     </Button>
 
                     <p className='text-sm text-center text-muted-foreground'> 
-                        Not registered yet? <a href="/register" className=' text-primary font-medium hover:underline'>Register</a>
+                        Not registered yet? <Link href="/register" className=' text-primary font-medium hover:underline'>Register</Link>
                     </p>
                 </form>
             </CardContent>
