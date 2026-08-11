@@ -91,7 +91,7 @@ function Login() {
                     </Button>
 
                     <p className='text-sm text-center text-muted-foreground'> 
-                        Not registered yet? <Link href="/register" className=' text-primary font-medium hover:underline'>Register</Link>
+                        Not registered yet? <Link to="/register" className=' text-primary font-medium hover:underline'>Register</Link>
                     </p>
                 </form>
             </CardContent>
