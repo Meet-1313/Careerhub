@@ -88,6 +88,10 @@ function Login() {
                     <Button type='submit' className="w-full">
                         Login
                     </Button>
+
+                    <p className='text-sm text-center text-muted-foreground'> 
+                        Not registered yet? <a href="/register" className=' text-primary font-medium hover:underline'>Register</a>
+                    </p>
                 </form>
             </CardContent>
         </Card>
