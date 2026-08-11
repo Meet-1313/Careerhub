@@ -129,14 +129,14 @@ function MyApplications() {
                                 <div>
 
                                     <h2 className="text-2xl font-bold">
-                                        {application.job.title}
+                                        {application.job?.title || 'Job no longer available'}
                                     </h2>
 
                                     <div className="flex items-center gap-2 mt-2 text-muted-foreground">
 
                                         <Building2 className="w-4 h-4" />
 
-                                        {application.job.company.name}
+                                        {application.job?.company.name || 'Company no longer available'}
 
                                     </div>
 
@@ -146,7 +146,7 @@ function MyApplications() {
 
                                             <MapPin className="w-4 h-4" />
 
-                                            {application.job.location}
+                                            {application.job?.location || 'Location not available'}
 
                                         </div>
 
@@ -154,7 +154,7 @@ function MyApplications() {
 
                                             <BriefcaseBusiness className="w-4 h-4" />
 
-                                            {application.job.jobType}
+                                            {application.job?.jobType || 'Job type not available'}
 
                                         </div>
 
@@ -165,7 +165,7 @@ function MyApplications() {
                                 <span
                                     className={`px-4 py-2 rounded-full text-sm font-medium ${getStatusColor(application.status)}`}
                                 >
-                                    {application.status}
+                                    {application.status ? application.status : 'Status not available'}
                                 </span>
 
                             </div>
@@ -173,7 +173,7 @@ function MyApplications() {
                             <div className="flex gap-3 mt-6">
 
                                 <Link
-                                    to={`/${application.job._id}`}
+                                    to={application.job ? `/${application.job._id}` : "#"}
                                 >
                                     <Button>
                                         View Job

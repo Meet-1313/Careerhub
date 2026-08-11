@@ -1,9 +1,20 @@
 import Company from "../models/Company.js";
+import Job from "../models/Job.js";
+import Application from "../models/Application.js";
 
 export const createCompany = async (req,res) => {
     try{
-        const { name,email,description,website,location,logo} = req.body;
+        const { name,description,website,location,logo} = req.body;
 
+         const existingCompany = await Company.findOne({
+            name: { $regex: `^${name}$`, $options: "i" }
+        });
+        if (existingCompany) {
+            return res.status(400).json({
+                success: false,
+                message: "A company with this name already exists"
+            });
+        }
         const company = await Company.create({
             name,description,website,location,logo,createdBy:req.user._id
         });
@@ -42,10 +53,17 @@ export const getCompanyById = async(req,res) => {
 export const updateCompany = async(req,res) => {
     try{
         const { id } = req.params;
+        // Only recruiters can update companies
+        if (req.user.role !== 'recruiter') {
+            return res.status(403).json({
+                success: false,
+                message: 'Only recruiters can update companies'
+            });
+        }
 
         const company = await Company.findById(id);
         if(!company){
-            res.status(404).json({ success: false, message: 'Company not found' });
+            return res.status(404).json({ success: false, message: 'Company not found' });
         }
         if(company.createdBy.toString() !== req.user._id.toString()){
             return res.status(403).json({ success: false, message: 'Unauthorized' });
@@ -63,15 +81,25 @@ export const updateCompany = async(req,res) => {
 export const deleteCompany = async(req,res) => {
     try{
         const { id } = req.params;
+
         const company = await Company.findById(id);
+
         if(!company){
             return res.status(404).json({ success: false, message: 'Company not found' });
         }
+
         if(company.createdBy.toString() !== req.user._id.toString()){
             return res.status(403).json({ success: false, message: 'Unauthorized' });
         }
+
+        const jobs = await Job.find({ company: id }).select('_id');
+        const jobIds = jobs.map(job => job._id);
+        await Application.deleteMany({ job: { $in: jobIds } });
+        await Job.deleteMany({ company: id });
+
         await Company.findByIdAndDelete(id);
         res.status(200).json({ success: true, message: 'Company deleted successfully' });
+
     }catch(err){
         console.error(err.message);
         res.status(500).json({ success: false, message: 'Server error' });

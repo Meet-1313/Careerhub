@@ -4,6 +4,12 @@ import Application from "../models/Application.js";
 
 export const createJob = async (req, res) => {
     try {
+        if (req.user.role !== 'recruiter') {
+            return res.status(403).json({
+                success: false,
+                message: 'Only recruiters can create companies'
+            });
+        }
         const { title, description, location, salary, experience, jobType, company } = req.body;
 
         //only recruiter can create job
@@ -122,7 +128,7 @@ export const getJobById = async (req, res) => {
         if (!job) {
             return res.status(404).json({ success: false, message: 'Job not found' });
         }
-        res.status(200).json({ success: true, job,alreadyApplied: !!alreadyApplied });
+        res.status(200).json({ success: true, job, alreadyApplied: !!alreadyApplied });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ success: false, message: 'Server error' });
@@ -131,6 +137,7 @@ export const getJobById = async (req, res) => {
 
 export const updateJob = async (req, res) => {
     try {
+
         const { id } = req.params;
         //only recruiter can update job
         if (req.user.role !== 'recruiter') {
@@ -144,8 +151,24 @@ export const updateJob = async (req, res) => {
         if (job.createdBy.toString() !== req.user._id.toString()) {
             return res.status(403).json({ success: false, message: 'Unauthorized' });
         }
+        const {
+            title,
+            description,
+            location,
+            salary,
+            experience,
+            jobType
+        } = req.body;
+
         const updatedJob = await Job.findByIdAndUpdate(
-            id, req.body, { new: true, runValidators: true },
+            id, {
+            title,
+            description,
+            location,
+            salary,
+            experience,
+            jobType
+        }, { new: true, runValidators: true },
         ).populate('company', 'name location website logo').populate('createdBy', 'username email role');
         res.status(200).json({ success: true, message: 'Job updated successfully', job: updatedJob });
     } catch (err) {
@@ -169,6 +192,10 @@ export const deleteJob = async (req, res) => {
         if (job.createdBy.toString() !== req.user._id.toString()) {
             return res.status(403).json({ success: false, message: 'Unauthorized' });
         }
+        // Delete all applications for this job
+        await Application.deleteMany({
+            job: id
+        });
         await Job.findByIdAndDelete(id);
         res.status(200).json({ success: true, message: 'Job deleted successfully' });
     } catch (err) {
@@ -178,12 +205,12 @@ export const deleteJob = async (req, res) => {
 }
 
 export const getMyJobs = async (req, res) => {
-    try{
-        if(req.user.role !== 'recruiter'){
-            return res.status(403).json({message: 'Only recruiters can view their jobs'});
+    try {
+        if (req.user.role !== 'recruiter') {
+            return res.status(403).json({ message: 'Only recruiters can view their jobs' });
         }
 
-        const { page = 1, limit = 10} = req.query;
+        const { page = 1, limit = 10 } = req.query;
         const pageNumber = Number(page);
         const limitNumber = Number(limit);
         const skip = (pageNumber - 1) * limitNumber;
@@ -192,15 +219,17 @@ export const getMyJobs = async (req, res) => {
         const jobs = await Job.find({
             createdBy: req.user._id,
         })
-        .skip(skip)
-        .limit(limitNumber)
-        .populate('company','name location logo')
-        .sort({createdAt: -1});
-        res.status(200).json({jobs,currentPage:pageNumber,
-                totalPages: Math.ceil(totalJobs / limitNumber),
-                totalJobs});
-    }catch(error){
+            .skip(skip)
+            .limit(limitNumber)
+            .populate('company', 'name location logo')
+            .sort({ createdAt: -1 });
+        res.status(200).json({
+            jobs, currentPage: pageNumber,
+            totalPages: Math.ceil(totalJobs / limitNumber),
+            totalJobs
+        });
+    } catch (error) {
         console.error(error);
-        res.status(500).json({message: 'Server error'});
+        res.status(500).json({ message: 'Server error' });
     }
 }

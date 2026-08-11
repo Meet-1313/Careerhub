@@ -60,7 +60,7 @@ const Sidebar = () => {
 
                         <>
                             <Link
-                                to="/"
+                                to="/home"
                                 onClick={() => setOpen(false)}
                                 className="px-4 py-3 rounded-lg hover:bg-muted transition"
                             >
