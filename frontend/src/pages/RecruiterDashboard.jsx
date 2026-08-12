@@ -102,15 +102,15 @@ function RecruiterDashboard() {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex gap-4 mt-6">
+                        <div className='grid grid-cols-2 sm:flex gap-3 mt-6'>
                             {/* grid grid-cols-2 sm:flex gap-3 mt-6 */}
-                            <Link to={`/recruiter/jobs/${job._id}/edit`}>
-                                <Button variant="outline">
+                            <Link to={`/recruiter/jobs/${job._id}/edit`} className="w-full sm:w-auto">
+                                <Button variant="outline" className="w-full">
                                     Edit
                                 </Button>
                             </Link>
-                            <Link to={`/recruiter/jobs/${job._id}/applicants`}>
-                                <Button variant="secondary">
+                            <Link to={`/recruiter/jobs/${job._id}/applicants`} className="w-full sm:w-auto">
+                                <Button variant="secondary" className="w-full">
                                     Applicants
                                 </Button>
                             </Link>
@@ -119,6 +119,7 @@ function RecruiterDashboard() {
                             </Button> */}
                             <Button
                                 variant="destructive"
+                                className="w-full sm:w-auto"
                                 onClick={() => {
                                     setSelectedJob(job);
                                     setOpenDeleteDialog(true);
@@ -126,8 +127,8 @@ function RecruiterDashboard() {
                             >
                                 Delete
                             </Button>
-                            <Link to={`/${job._id}`}>
-                                <Button>
+                            <Link to={`/${job._id}`} className="w-full sm:w-auto">
+                                <Button className="w-full">
                                     View Details
                                 </Button>
                             </Link>
